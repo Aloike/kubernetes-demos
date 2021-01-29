@@ -1,0 +1,59 @@
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+    namespace:  demo-proxy
+    name:       proxy-configmap-nginx
+
+data:
+  nginx.conf: |
+    # Kubernetes proxy-config from a k8s configMap.
+    #
+    # used for adding https security
+    
+    user  www-data;
+    worker_processes  1;
+    
+    error_log  /var/log/nginx/error.log warn;
+    pid        /var/run/nginx.pid;
+    
+    events {
+        worker_connections  1024;
+    }
+    
+    http {
+        keepalive_timeout  65;
+
+
+        server {
+            listen 443 ssl;
+            server_name _;
+
+            access_log /var/log/nginx/default_443.access.log;
+    
+            ssl_certificate /etc/nginx/certs/local.demo.proxy.crt;
+            ssl_certificate_key /etc/nginx/certs/local.demo.proxy.key;
+            
+            location / {
+                proxy_pass http://backend-hello-kubernetes;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                
+                proxy_buffering off;
+                proxy_request_buffering off;
+            }
+        }
+
+
+        server {
+            listen 80 default_server;
+            server_name _;
+
+            access_log /var/log/nginx/default.access.log;
+
+            server_name_in_redirect off;
+
+            root  /var/www/default/htdocs;
+        }
+    }
+

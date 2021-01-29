@@ -1,0 +1,13 @@
+apiVersion: v1
+kind:       PersistentVolumeClaim
+metadata:
+  namespace:    demo-proxy
+  name:         proxy-pvc-www
+  labels:
+    app:        proxy
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage:  256Mi

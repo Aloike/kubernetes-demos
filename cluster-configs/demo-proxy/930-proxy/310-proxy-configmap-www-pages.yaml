@@ -1,0 +1,9 @@
+apiVersion: v1
+kind:       ConfigMap
+metadata:
+    namespace:  demo-proxy
+    name:       proxy-configmap-www-pages
+
+data:
+  default-index.html: |
+    Proxy - Default page

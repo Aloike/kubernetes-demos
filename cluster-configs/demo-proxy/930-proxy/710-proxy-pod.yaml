@@ -1,0 +1,68 @@
+# ##############################################################################
+# Here we have the Kubernetes pod named `proxy`.
+# It provides an Nginx proxy that redirects external HTTP requests to the 
+# external HTTPS port.
+# For the proxy we are not using a Deployment but a Pod, to be able to make use
+# of standard HTTP/HTTPS-ports 80 & 443
+# ##############################################################################
+apiVersion: v1
+kind:       Pod
+metadata:
+  namespace:  demo-proxy
+  name:       proxy
+  labels:
+    app:      proxy
+
+spec:
+  restartPolicy:    Always
+  volumes:
+    - name:         certs
+      persistentVolumeClaim:
+        claimName:      ssl-certs-pvc-certs
+    # - name:         docker-socket
+    #   hostPath:
+    #     path:           "/var/run/docker.sock"
+    #     type:           Socket
+    - name:         nginx-config
+      configMap:
+        name:           proxy-configmap-nginx
+    - name:         nginx-logs
+      persistentVolumeClaim:
+        claimName:      proxy-pvc-logs
+    - name:         www
+      persistentVolumeClaim:
+        claimName:      proxy-pvc-www
+    - name:         www-pages
+      configMap:
+        name:           proxy-configmap-www-pages
+  containers:
+  - name:           proxy
+    image:          nginx
+    volumeMounts:
+    - mountPath:    /etc/nginx/certs
+      name:             certs
+    - mountPath:    /etc/nginx/nginx.conf
+      name:             nginx-config
+      subPath:              nginx.conf
+    # - mountPath:    /tmp/docker.sock
+    #   name:             docker-socket
+    - mountPath:    /var/log/nginx
+      name:             nginx-logs
+    - mountPath:    /var/www
+      name:             www
+    - mountPath:    /var/www/default/htdocs/index.html
+      name:             www-pages
+      subPath:              default-index.html
+    ports:
+    - containerPort:  80
+      protocol:       TCP
+      hostPort:       80
+    - containerPort:  443
+      protocol:       TCP
+      hostPort:       443
+    env:
+      - name:       TZ
+        value:      Europe/Paris
+
+    terminationMessagePath:     /dev/termination-log
+    terminationMessagePolicy:   File
