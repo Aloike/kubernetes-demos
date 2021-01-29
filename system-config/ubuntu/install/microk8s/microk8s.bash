@@ -81,25 +81,30 @@ sudo usermod -a -G microk8s ${SUDO_USER}
 echo "Change owner of '${SUDO_USER_HOME}/.kube/' directory"
 sudo chown -f -R ${SUDO_USER} ${SUDO_USER_HOME}/.kube
 
-echo "Add a 'kubectl' alias in bashrc if it doesn't exist..."
+# echo "Add a 'kubectl' alias in bashrc if it doesn't exist..."
+#
+# echo -en "\n\n"	>> ${SUDO_USER_HOME}/.bashrc
+# cat << EOT >> ${SUDO_USER_HOME}/.bashrc
+# if ! command -v kubectl &> /dev/null
+# then
+#     echo "kubectl could not be found - Create an alias for 'microk8s.kubectl'..."
+#
+#     # Create the alias
+#     alias kubectl='microk8s.kubectl'
+#
+#     # Source the completion script in your ~/.bashrc file
+#     source <(kubectl completion bash)
+#
+#     # extend shell completion to work with that alias
+#     complete -F __start_kubectl kubectl
+# fi
+#
+# EOT
 
-echo -en "\n\n"	>> ${SUDO_USER_HOME}/.bashrc
-cat << EOT >> ${SUDO_USER_HOME}/.bashrc
-if ! command -v kubectl &> /dev/null
-then
-    echo "kubectl could not be found - Create an alias for 'microk8s.kubectl'..."
-
-    # Create the alias
-    alias kubectl='microk8s.kubectl'
-
-    # Source the completion script in your ~/.bashrc file
-    source <(kubectl completion bash)
-
-    # extend shell completion to work with that alias
-    complete -F __start_kubectl kubectl
-fi
-
-EOT
+echo "Create snap command alias for 'microk8s.kubectl'..."
+snap alias	\
+	microk8s.kubectl	\
+	kubectl
 
 
 #
