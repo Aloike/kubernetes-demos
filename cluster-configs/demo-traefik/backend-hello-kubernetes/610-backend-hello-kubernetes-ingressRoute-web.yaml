@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind:       IngressRoute
+metadata:
+  name:     hello-kubernetes-web
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind:       Rule
+    match:      Host(`localhost`) && PathPrefix(`/hello`)
+    services:
+    - name:     backend-hello-kubernetes-svc
+      port:     80

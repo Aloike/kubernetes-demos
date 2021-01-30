@@ -1,0 +1,15 @@
+##  @see    https://github.com/paulbouwer/hello-kubernetes
+
+apiVersion: v1
+kind:       Service
+
+metadata:
+  name:     backend-hello-kubernetes-svc
+
+spec:
+  # type:     LoadBalancer
+  selector:
+    app:        backend-hello-kubernetes
+  ports:
+  - port:       80
+    targetPort: 8080

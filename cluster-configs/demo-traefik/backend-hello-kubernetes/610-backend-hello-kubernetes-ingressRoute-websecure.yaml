@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind:       IngressRoute
+metadata:
+  # name:     hello-kubernetes-web-tls
+  name:     hello-kubernetes-websecure
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver:   le
+  routes:
+  - kind:       Rule
+    match:      Host(`localhost`) && PathPrefix(`/hello`)
+    services:
+    - name:     backend-hello-kubernetes-svc
+      port:     80

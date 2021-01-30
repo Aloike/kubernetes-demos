@@ -1,0 +1,13 @@
+apiVersion: v1
+kind:       Service
+
+metadata:
+  name:     backend-whoami2-svc
+
+spec:
+  selector:
+    app:    backend-whoami2
+  ports:
+  - name:       web
+    port:       80
+    protocol:   TCP

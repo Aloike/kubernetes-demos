@@ -1,0 +1,26 @@
+##  @brief  This PVC provides access to a volume containing SSL certs generated
+##          by the omgwtfssl pod.
+
+kind:       PersistentVolumeClaim
+apiVersion: v1
+
+metadata:
+
+    #namespace:  default
+    name:       traefik-certs-pvc-certs
+
+    #labels:
+    #  app:
+
+
+spec:
+
+    #storageClassName:   ssl-certs
+
+    accessModes:
+      - ReadWriteMany # The volume can be mounted read-write by many nodes
+
+    resources:
+        requests:
+            storage:    1M
+

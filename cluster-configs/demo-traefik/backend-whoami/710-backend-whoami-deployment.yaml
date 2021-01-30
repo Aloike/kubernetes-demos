@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:   backend-whoami
+  labels:
+    app:  backend-whoami
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-whoami
+  template:
+    metadata:
+      labels:
+        app: backend-whoami
+    spec:
+      containers:
+      - name:   whoami
+        image:  containous/whoami:v1.4.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

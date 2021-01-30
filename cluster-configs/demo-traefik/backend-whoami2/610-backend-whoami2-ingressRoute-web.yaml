@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind:       IngressRoute
+metadata:
+  name:     whoami2-web
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind:       Rule
+    match:      Host(`localhost`) && PathPrefix(`/whoami2`)
+    services:
+    - name:     backend-whoami2-svc
+      port:     80
